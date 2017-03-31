@@ -1,4 +1,4 @@
-package com.jieding.bytearraytest;
+package com.jieding.arraytest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
