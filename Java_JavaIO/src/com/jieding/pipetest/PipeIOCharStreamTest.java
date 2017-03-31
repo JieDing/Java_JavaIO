@@ -19,7 +19,7 @@ public class PipeIOCharStreamTest {
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
-					out.write("hi girl");
+					out.write("hello world");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
