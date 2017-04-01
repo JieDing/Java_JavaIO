@@ -1,17 +1,17 @@
 package com.jieding.filetest;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URISyntaxException;
 
-public class FileIOByteTest {
+public class FileIOCharTest {
 	static File f = null;
 	public static void main(String[] args) {
-		
+		// TODO Auto-generated method stub
 		try {
 			f = new File(FileIOByteTest.class.getClassLoader().getResource("com/jieding/resources/abc.txt").toURI());			
 			System.out.println(f.getAbsolutePath());
@@ -21,28 +21,27 @@ public class FileIOByteTest {
 			e1.printStackTrace();
 		}
 		
-		try(InputStream in = new FileInputStream(f)){
-			byte[] b = new byte[15];
-			int bytesRead = in.read(b);
-			int bufferSize = bytesRead;
-			while(bytesRead != -1){
-				bytesRead = in.read(b);
+		try(Reader in = new FileReader(f)){
+			char[] b = new char[15];
+			int charsRead = in.read(b);
+			int bufferRead = charsRead;
+			while(charsRead != -1){
+				charsRead = in.read(b);
 			}
-			for(int i=0; i<bufferSize; i++){
-				System.out.print((char)b[i]);
-			}
+			for(int i=0; i<bufferRead;i++)
+				System.out.print(b[i]);
+			System.out.println();
 		}catch (IOException e){
 			e.printStackTrace();
 		}
 		
-		
-		
-		try(OutputStream out = new FileOutputStream(f)){
-			out.write("aaaa".getBytes());
+		try(Writer out = new FileWriter(f)){
+			out.write("hello_world".toCharArray());
 			out.flush();
 		}catch (IOException e){
 			e.printStackTrace();
 		}
 		
 	}
+
 }
