@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -29,12 +31,13 @@ public class MappingFileTest {
 			}
 		}
 		
-		try(DataOutputStream out = new DataOutputStream(
+		
+		/*try(DataOutputStream out = new DataOutputStream(
 				new FileOutputStream(f))){
-			out.write("fddsafdasfdas1\n".getBytes("UTF-16BE"));
-			out.write("fddsafdasfdas2\n".getBytes("UTF-16BE"));
-			out.write("fddsafdasfdas3\n".getBytes("UTF-16BE"));
-			out.write("fddsafdasfdas4\n".getBytes("UTF-16BE"));
+			out.write("扂請間豌\n".getBytes("UTF-16BE"));
+			out.write("扂請間豌2\n".getBytes("UTF-16BE"));
+			out.write("扂請間豌3\n".getBytes("UTF-16BE"));
+			out.write("扂請間豌4\n".getBytes("UTF-16BE"));
 		
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -42,23 +45,26 @@ public class MappingFileTest {
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
-		}
+		}*/
 		
 		
-		try(FileChannel channel = FileChannel.open(file)){
+		try{
+			RandomAccessFile randomAccessFile = new RandomAccessFile(f, "rw");
+			FileChannel channel = randomAccessFile.getChannel();
 			int length = (int) channel.size();
-			MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, length);
+			MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, length);
 			
-			ByteBuffer cbuffer = buffer.asReadOnlyBuffer();
+			ByteBuffer b = buffer.duplicate();
 	
 			
-			System.out.print(Charset.forName("UTF-16BE").decode(cbuffer));
+			System.out.print(Charset.forName("UTF-16BE").decode(b));
 			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 	}
 
