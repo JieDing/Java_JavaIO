@@ -31,35 +31,67 @@ public class FileChannelTest {
 		try(FileChannel channel = new RandomAccessFile(f,"rw").getChannel()){
 			
 			
-			ByteBuffer buffer = ByteBuffer.allocate(60);
-			CharBuffer cBuffer = CharBuffer.allocate(60);
+			ByteBuffer buffer = ByteBuffer.allocate(100);
+			CharBuffer cBuffer = CharBuffer.allocate(100);
 			CharsetDecoder decoder = Charset.forName("utf-16BE").newDecoder();
 			
 			
 			String a = "hello\n";
 			String b = "world\n";
+			String c = "jie\n";
+			/*
+			 * 未插入数据前，buffer的position=0；limit = capacity=100；
+			 */
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
+			
 			buffer.put(a.getBytes("utf-16BE"), 0, a.length()*2);
 			buffer.put(b.getBytes("utf-16BE"), 0, b.length()*2);
+			buffer.put(c.getBytes("utf-16BE"), 0, c.length()*2);
 			
+			/*
+			 * 插入数据后，buffer的position=32；limit = capacity=100；
+			 */
+			
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
+			
+			/*
+			 * 切换为读模式，buffer的limit = position=32；position=0；
+			 */
 			buffer.flip();
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
 			
+			
+			/*
+			 * 将buffer中的数据输出到channel中，buffer的limit = position=32；position=32；
+			 */
 			while(buffer.hasRemaining()){
 				channel.write(buffer);
 			}
 			
-			int bytesRead = channel.read(buffer);
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
 			
-			while(bytesRead !=-1){
-				System.out.println("read "+ bytesRead);
-				buffer.flip();
-				decoder.decode(buffer, cBuffer, false);
-				cBuffer.flip();
-				
-				System.out.println(cBuffer);
-				buffer.clear();
-				cBuffer.clear();
-				bytesRead = channel.read(buffer);
-			}
+			/*
+			 * 重置position，buffer的limit = position=32；position=0；
+			 */
+			buffer.rewind();
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
+			
+			/*
+			 * 将buffer中的数据输出到charbuffer中，buffer的limit = position=32；position=32；
+			 */
+			decoder.decode(buffer, cBuffer, false);
+			System.out.println("limit "+buffer.limit());
+			System.out.println("position "+buffer.position());
+			cBuffer.flip();
+			
+			System.out.println(cBuffer);
+			
+		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
